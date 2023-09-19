@@ -9,10 +9,6 @@ class Jogador(pygame.sprite.Sprite):
         self.pos = pygame.Vector2(x, y)
         self.rect = self.image.get_rect(center = (self.pos.x, self.pos.y))
 
-        self.group = pygame.sprite.GroupSingle()
-        self.group.add(self)
-
-    
 
 # Inicializa o Pygame
 pygame.init()
@@ -32,6 +28,11 @@ raio = 50
 x_circulo = largura // 2
 y_circulo = altura // 2
 
+#Define objeto Jogador
+jogador = Jogador(largura / 2, altura / 2)
+grupoJogador = pygame.sprite.GroupSingle()
+grupoJogador.add(jogador)
+
 # Loop principal
 while True:
     for evento in pygame.event.get():
@@ -42,6 +43,7 @@ while True:
     # Limpa a tela
     janela.fill(branco)
 
-
+    #Desenha o jogador na tela
+    grupoJogador.draw(janela)
     # Atualiza a tela
     pygame.display.update()

@@ -1,6 +1,19 @@
 import pygame
 import sys
 
+class Jogador(pygame.sprite.Sprite):
+    def __init__(self, x: int, y: int):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("playerPH.png")
+        self.image = pygame.transform.scale(self.image, (25, 50))
+        self.pos = pygame.Vector2(x, y)
+        self.rect = self.image.get_rect(center = (self.pos.x, self.pos.y))
+
+        self.group = pygame.sprite.GroupSingle()
+        self.group.add(self)
+
+    
+
 # Inicializa o Pygame
 pygame.init()
 

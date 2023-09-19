@@ -9,6 +9,24 @@ class Jogador(pygame.sprite.Sprite):
         self.pos = pygame.Vector2(x, y)
         self.rect = self.image.get_rect(center = (self.pos.x, self.pos.y))
 
+        self.size = self.rect.width
+        self.speed = 1
+
+    def move(self, direction):
+        if self.pos.y < self.size: self.pos.y = self.size
+        if self.pos.y > altura - self.size: self.pos.y = altura - self.size
+        if self.pos.x < self.size - 14: self.pos.x = self.size - 14
+        if self.pos.x > largura - self.size + 11 : self.pos.x = largura - self.size + 11
+        
+        if direction == "up" and self.pos.y != self.size:
+            self.pos.y -= self.speed
+        if direction == "down" and self.pos.y != altura - self.size:
+            self.pos.y += self.speed
+        if direction == "left" and self.pos.x != self.size - 14:
+            self.pos.x -= self.speed
+        if direction == "right" and self.pos.x != largura - self.size + 11:
+            self.pos.x += self.speed
+        self.rect = self.image.get_rect(center=(self.pos.x, self.pos.y))
 
 # Inicializa o Pygame
 pygame.init()
@@ -39,6 +57,16 @@ while True:
         if evento.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_w]:
+        grupoJogador.sprite.move("up")
+    if keys[pygame.K_s]:
+        grupoJogador.sprite.move("down")
+    if keys[pygame.K_a]:
+        grupoJogador.sprite.move("left")
+    if keys[pygame.K_d]:
+        grupoJogador.sprite.move("right")
 
     # Limpa a tela
     janela.fill(branco)

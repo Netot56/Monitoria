@@ -30,8 +30,9 @@ class Jogador(pygame.sprite.Sprite):
             self.pos.x += self.vel
         self.rect = self.image.get_rect(center=(self.pos.x, self.pos.y))
 
-# Inicializa o Pygame
+# Inicializa e configura o Pygame
 pygame.init()
+clock = pygame.time.Clock()
 
 # Configurações da janela
 largura = 800
@@ -55,6 +56,7 @@ grupoJogador.add(jogador)
 
 # Loop principal
 while True:
+    clock.tick(60)
     for evento in pygame.event.get():
         if evento.type == pygame.QUIT:
             pygame.quit()

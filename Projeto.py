@@ -3,29 +3,31 @@ import sys
 
 class Jogador(pygame.sprite.Sprite):
     def __init__(self, x: int, y: int):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load("playerPH.png")
-        self.image = pygame.transform.scale(self.image, (25, 50))
-        self.pos = pygame.Vector2(x, y)
-        self.rect = self.image.get_rect(center = (self.pos.x, self.pos.y))
+        pygame.sprite.Sprite.__init__(self) # Inicia a classe pai sprite
+        self.image = pygame.image.load("playerPH.png") #Carrega a image do jogador
+        self.image = pygame.transform.scale(self.image, (25, 50)) #Diminui o tamanho da image
+        self.pos = pygame.Vector2(x, y) #Define a posição como objeto Vector2 (Vetor bidimensional)
+        self.rect = self.image.get_rect(center = (self.pos.x, self.pos.y)) #Define o objeto rect tendo centro no centro da image
 
-        self.size = self.rect.width
-        self.speed = 1
+        self.tamanho = self.rect.width #Define tamanho como largura do rect
+        self.vel = 1 #Define velocidade
 
-    def move(self, direction):
-        if self.pos.y < self.size: self.pos.y = self.size
-        if self.pos.y > altura - self.size: self.pos.y = altura - self.size
-        if self.pos.x < self.size - 14: self.pos.x = self.size - 14
-        if self.pos.x > largura - self.size + 11 : self.pos.x = largura - self.size + 11
+    def move(self, direcao):
+        #Checks para que o jogador não saia do limite da tela
+        if self.pos.y < self.tamanho: self.pos.y = self.tamanho
+        if self.pos.y > altura - self.tamanho: self.pos.y = altura - self.tamanho
+        if self.pos.x < self.tamanho - 14: self.pos.x = self.tamanho - 14
+        if self.pos.x > largura - self.tamanho + 11 : self.pos.x = largura - self.tamanho + 11
         
-        if direction == "up" and self.pos.y != self.size:
-            self.pos.y -= self.speed
-        if direction == "down" and self.pos.y != altura - self.size:
-            self.pos.y += self.speed
-        if direction == "left" and self.pos.x != self.size - 14:
-            self.pos.x -= self.speed
-        if direction == "right" and self.pos.x != largura - self.size + 11:
-            self.pos.x += self.speed
+        #Sistema de movimentação do jogador
+        if direcao == "up" and self.pos.y != self.tamanho:
+            self.pos.y -= self.vel
+        if direcao == "down" and self.pos.y != altura - self.tamanho:
+            self.pos.y += self.vel
+        if direcao == "left" and self.pos.x != self.tamanho - 14:
+            self.pos.x -= self.vel
+        if direcao == "right" and self.pos.x != largura - self.tamanho + 11:
+            self.pos.x += self.vel
         self.rect = self.image.get_rect(center=(self.pos.x, self.pos.y))
 
 # Inicializa o Pygame
@@ -58,6 +60,7 @@ while True:
             pygame.quit()
             sys.exit()
 
+    #Recebe e lida com inputs do teclado
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         grupoJogador.sprite.move("up")

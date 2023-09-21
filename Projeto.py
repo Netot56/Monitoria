@@ -10,7 +10,7 @@ class Jogador(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center = (self.pos.x, self.pos.y)) #Define o objeto rect tendo centro no centro da image
 
         self.tamanho = self.rect.width #Define tamanho como largura do rect
-        self.vel = 1 #Define velocidade
+        self.vel = 1 #Define velocidaded
 
     def move(self, direcao):
         #Checks para que o jogador não saia do limite da tela

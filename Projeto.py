@@ -6,7 +6,7 @@ import os
 
 class Jogador(pygame.sprite.Sprite):
     def __init__(self, x: int, y: int):
-        pygame.sprite.Sprite.__init__(self) # Inicia a classe pai sprite
+        pygame.sprite.Sprite.__init__(self) # Inicia a classe pai sprites
     
         #armazenar as sprites em uma lista
         self.sprites = []

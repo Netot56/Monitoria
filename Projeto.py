@@ -106,13 +106,16 @@ grupoJogador.add(jogador)
 while True:
     clock.tick(60)
     for evento in pygame.event.get():
+        
         if evento.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
         keys = pygame.key.get_pressed()
+
         if keys[pygame.K_LSHIFT]:
             jogador.andar()
+
         else:
             jogador.parar()
 
@@ -125,12 +128,16 @@ while True:
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
         grupoJogador.sprite.move("up")
+
     if keys[pygame.K_s]:
         grupoJogador.sprite.move("down")
+
     if keys[pygame.K_a]:
         grupoJogador.sprite.move("left")
+
     if keys[pygame.K_d]:
         grupoJogador.sprite.move("right")
+
 
     # Limpa a tela
     janela.fill(branco)

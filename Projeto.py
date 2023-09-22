@@ -107,7 +107,7 @@ while True:
             sys.exit()
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_a] or [pygame.K_s] or [pygame.K_d] or [pygame.K_w]:
+        if keys[pygame.K_LSHIFT]:
             jogador.andar()
         else:
             jogador.parar()

@@ -2,29 +2,32 @@ from typing import Any
 from pygame.locals import *
 import pygame
 import sys
+import os
 
 class Jogador(pygame.sprite.Sprite):
     def __init__(self, x: int, y: int):
         pygame.sprite.Sprite.__init__(self) # Inicia a classe pai sprite
-
-        #armazenar as sprites
+    
+        #armazenar as sprites em uma lista
         self.sprites = []
 
-        #Adicionando Sprites na lista
-        self.sprites.append(pygame.image.load('personagem/run-1.png'))
-        self.sprites.append(pygame.image.load('personagem/run-2.png'))
-        self.sprites.append(pygame.image.load('personagem/run-3.png'))
-        self.sprites.append(pygame.image.load('personagem/run-4.png'))
-        self.sprites.append(pygame.image.load('personagem/run-5.png'))
-        self.sprites.append(pygame.image.load('personagem/run-6.png'))
-        self.sprites.append(pygame.image.load('personagem/run-7.png'))
-        self.sprites.append(pygame.image.load('personagem/run-8.png'))
+        #Chamdando a pasta onde estão as imagens do personagem
+        self.pasta = './personagem/'
 
+        #Acessando pasta
+        self.itens_na_pasta = os.listdir(self.pasta)
+        
+        for item in self.itens_na_pasta:
+            for i in range(1,len(item)):
+                #Chamando cada imagem e adicionando na lista self.sprites
+                self.sprites.append(pygame.image.load(f'personagem/run-{i}.png'))
+
+        #Primeira imagem que aparece na tela
         self.atual = 0
-        self.image = self.sprites[self.atual] #Primeira imagem que aparece na tela
-        #self.image = pygame.transform.scale(self.image, (128*3,64*3))
+        self.image = self.sprites[self.atual] 
 
-        self.pos = pygame.Vector2(x, y) #Define a posição como objeto Vector2 (Vetor bidimensional)
+        #Define a posição como objeto Vector2 (Vetor bidimensional)
+        self.pos = pygame.Vector2(x, y)
         self.rect = self.image.get_rect(center = (self.pos.x, self.pos.y)) #Define o objeto rect tendo centro no centro da image
         self.tamanho = self.rect.width #Define tamanho como largura do rect
         self.vel = 1 #Define velocidade
@@ -45,6 +48,7 @@ class Jogador(pygame.sprite.Sprite):
         if self.animar == True:
             #Mudança de imagem na iterações
             self.atual = self.atual + 0.2
+            
             #Voltando para o 0, após terminar as sprites
             if self.atual>=len(self.sprites):
                 self.atual = 0

@@ -48,7 +48,7 @@ class Jogador(pygame.sprite.Sprite):
             #Voltando para o 0, após terminar as sprites
             if self.atual>=len(self.sprites):
                 self.atual = 0
-                self.animar = False #Precisa mudar
+                #self.animar = False #Precisa mudar
             self.image = self.sprites[int(self.atual)]
             #self.image = pygame.transform.scale(self.image, (128*3,64*3))
 

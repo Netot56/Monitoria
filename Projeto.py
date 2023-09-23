@@ -60,10 +60,17 @@ class Jogador(pygame.sprite.Sprite):
 
     def move(self, direcao):
         #Checks para que o jogador não saia do limite da tela
-        if self.pos.y < self.tamanho: self.pos.y = self.tamanho
-        if self.pos.y > altura - self.tamanho: self.pos.y = altura - self.tamanho
-        if self.pos.x < self.tamanho - 14: self.pos.x = self.tamanho - 14
-        if self.pos.x > largura - self.tamanho + 11 : self.pos.x = largura - self.tamanho + 11
+        if self.pos.y < self.tamanho:
+            self.pos.y = self.tamanho
+
+        if self.pos.y > altura - self.tamanho: 
+            self.pos.y = altura - self.tamanho
+
+        if self.pos.x < self.tamanho - 14:
+            self.pos.x = self.tamanho - 14
+
+        if self.pos.x > largura - self.tamanho + 11: 
+            self.pos.x = largura - self.tamanho + 11
         
         #Sistema de movimentação do jogador
         if direcao == "up" and self.pos.y != self.tamanho:
@@ -96,11 +103,14 @@ x_circulo = largura // 2
 y_circulo = altura // 2
 
 #Define objeto Jogador
-todas_sprites = pygame.sprite.Group()
+'''todas_sprites = pygame.sprite.Group()'''
 jogador = Jogador(largura / 2, altura /2)
-todas_sprites.add(jogador)
+'''todas_sprites.add(jogador)'''
 grupoJogador = pygame.sprite.GroupSingle()
 grupoJogador.add(jogador)
+
+cenario = pygame.image.load('cenario/mapa.png')
+cenario = pygame.transform.scale(cenario,(largura, altura))
 
 # Loop principal
 while True:
@@ -113,36 +123,44 @@ while True:
 
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_LSHIFT]:
+        if keys[pygame.K_d] or keys[pygame.K_w] or keys[pygame.K_a] or keys[pygame.K_s]:
             jogador.andar()
-
+        
         else:
             jogador.parar()
-
+            
     #Desenhando meu jogador        
-    todas_sprites.draw(janela)
-    todas_sprites.update()
-
+    #todas_sprites.draw(janela)
+    #todas_sprites.update()
+    
 
     #Recebe e lida com inputs do teclado
     keys = pygame.key.get_pressed()
+ 
     if keys[pygame.K_w]:
         grupoJogador.sprite.move("up")
+      
 
     if keys[pygame.K_s]:
         grupoJogador.sprite.move("down")
-
+          
     if keys[pygame.K_a]:
         grupoJogador.sprite.move("left")
+      
 
     if keys[pygame.K_d]:
         grupoJogador.sprite.move("right")
-
-
+                
     # Limpa a tela
     janela.fill(branco)
 
+    janela.blit(cenario, (0, 0))
+
     #Desenha o jogador na tela
     grupoJogador.draw(janela)
+
+    pygame.display.flip()
+
+    grupoJogador.update()
     # Atualiza a tela
     pygame.display.update()

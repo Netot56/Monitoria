@@ -33,7 +33,6 @@ class Jogador(pygame.sprite.Sprite):
         self.tamanho = self.rect.width #Define tamanho como largura do rect
         self.vel = 1 #Define velocidade
 
-
         self.animar = False
 
     #Fazer o personagem andar
@@ -56,8 +55,6 @@ class Jogador(pygame.sprite.Sprite):
                 #self.animar = False #Precisa mudar
             self.image = self.sprites[int(self.atual)]
             #self.image = pygame.transform.scale(self.image, (128*3,64*3))
-
-
 
     def move(self, direcao):
         #Checks para que o jogador não saia do limite da tela
@@ -88,6 +85,12 @@ def nova_pos(velha_pos, vel, angulo):
     mover_vec = pygame.math.Vector2()
     mover_vec.from_polar((vel, angulo))
     return velha_pos + mover_vec
+
+class Inimigo(pygame.sprite.Sprite):
+    def __init__(self, dano, vel, sprite, tamanho):
+        self.image = pygame.image.load(sprite)
+        self.image = pygame.image.transform(self.image, tamanho)
+        self.dano = dano
 
 class Bala(pygame.sprite.Sprite):
     def __init__(self, x, y, direc, vel, tamanho):

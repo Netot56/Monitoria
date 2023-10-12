@@ -8,10 +8,19 @@ import os
 class Jogador(pygame.sprite.Sprite):
     def __init__(self, x: int, y: int):
         pygame.sprite.Sprite.__init__(self) # Inicia a classe pai sprites
-    
-        #armazenar as sprites em uma lista
-        self.sprites = []
 
+        self.animardescendo = False
+        self.animardireita = False 
+        self.animarsubindo = False
+        self.animaresquerda = False
+
+
+        #armazenar as sprites em uma lista
+        self.spritesdescendo = []
+        self.spritesdireita = []
+        self.spritesesquerda = []
+        self.spritessubindo  = []
+       
         #Chamdando a pasta onde estão as imagens do personagem
         self.pasta = './heroi/'
 
@@ -19,13 +28,30 @@ class Jogador(pygame.sprite.Sprite):
         self.itens_na_pasta = os.listdir(self.pasta)
         
         for item in self.itens_na_pasta:
-            for i in range(0,11):
-                #Chamando cada imagem e adicionando na lista self.sprites
-                self.sprites.append(pygame.image.load(f'heroi/Personagem{i}.png'))
+
+            for i in range(0,3):
+                #Chamando cada imagem e adicionando na lista self.sprites aqui sendo as imagens do personagem descendo
+                self.spritesdescendo.append(pygame.image.load(f'heroi/Personagem{i}.png'))
+           
+            for i in range(3,6):
+                #Chamando cada imagem e adicionando na lista self.sprites aqui sendo as imagens do personagem a direita
+                self.spritesdireita.append(pygame.image.load(f'heroi/Personagem{i}.png'))
+          
+         
+            for i in range(6,9):
+                #Chamando cada imagem e adicionando na lista self.sprites aqui sendo as imagens do personagem a esquerda
+                self.spritesesquerda.append(pygame.image.load(f'heroi/Personagem{i}.png'))
+              
+           
+            for i in range(9,12):
+                #Chamando cada imagem e adicionando na lista self.sprites aqui sendo as imagens do personagem subindo
+                self.spritessubindo.append(pygame.image.load(f'heroi/Personagem{i}.png'))
+              
+
 
         #Primeira imagem que aparece na tela
         self.atual = 0
-        self.image = self.sprites[self.atual] 
+        self.image = self.spritesdescendo[self.atual] 
         self.image = pygame.transform.scale(self.image, (15*2.5,20*2.5))
 
         #Define a posição como objeto Vector2 (Vetor bidimensional)
@@ -35,30 +61,92 @@ class Jogador(pygame.sprite.Sprite):
         self.vel = 1 #Define velocidade
 
 
-        self.animar = False
+       
 
     #Fazer o personagem andar
-    def andar(self):
-        self.animar = True
+    def andardescendo(self):
+        self.animardescendo = True
+         #Fazer o personagem andar para baixo
+        
+    def andarsubindo(self):
+        self.animarsubindo = True
+         #Fazer o personagem andar para cima
+
+    def andardireita(self):
+        self.animardireita = True
+           #Fazer o personagem andar para direita
+       
+    def andaresquerda(self):
+        self.animaresquerda = True
+          #Fazer o personagem andar para esquerda
 
     #Fazer o personagem parar
-    def parar(self):
-        self.animar = False
+    def pararsubindo(self):
+        self.animarsubindo = False
+       
+    def parardescendo(self):
+        self.animardescendo = False
+
+    def pararesqueda(self):
+        self.animaresquerda = False
+    
+    def parardireita(self):
+        self.animardireita = False
+       
+       
 
     #Animação do personagem
     def update(self):
-        if self.animar == True:
+       
+        if self.animardescendo == True:
             #Mudança de imagem na iterações
-            self.atual = self.atual + 0.2
+            self.atual = self.atual + 0.12
             
             #Voltando para o 0, após terminar as sprites
-            if self.atual>=len(self.sprites):
+            if self.atual>=len(self.spritesdescendo):
                 self.atual = 0
                 #self.animar = False #Precisa mudar
             
-            self.image = self.sprites[int(self.atual)]
+            self.image = self.spritesdescendo[int(self.atual)]
             self.image = pygame.transform.scale(self.image, (15*2.5,20*2.5))
 
+        if self.animarsubindo == True:
+            #Mudança de imagem na iterações
+            self.atual = self.atual + 0.12
+            
+            #Voltando para o 0, após terminar as sprites
+            if self.atual>=len(self.spritessubindo):
+                self.atual = 0
+                #self.animar = False #Precisa mudar
+            
+            self.image = self.spritessubindo[int(self.atual)]
+            self.image = pygame.transform.scale(self.image, (15*2.5,20*2.5))
+
+               
+        if self.animardireita == True:
+            #Mudança de imagem na iterações
+            self.atual = self.atual + 0.12
+           
+            #Voltando para o 0, após terminar as sprites
+            if self.atual>=len(self.spritesdireita):
+                self.atual = 0
+                #self.animar = False #Precisa mudar
+        
+            self.image = self.spritesdireita[int(self.atual)]
+            self.image = pygame.transform.scale(self.image, (15*2.5,20*2.5))
+
+
+        if self.animaresquerda == True:
+            #Mudança de imagem na iterações
+            self.atual = self.atual + 0.12
+           
+            #Voltando para o 0, após terminar as sprites
+            if self.atual>=len(self.spritesesquerda):
+                self.atual = 0
+                #self.animar = False #Precisa mudar
+        
+            self.image = self.spritesesquerda[int(self.atual)]
+            self.image = pygame.transform.scale(self.image, (15*2.5,20*2.5))
 
 
     def move(self, direcao):
@@ -157,11 +245,32 @@ while True:
 
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_d] or keys[pygame.K_w] or keys[pygame.K_a] or keys[pygame.K_s]:
-            jogador.andar()
+        if keys[pygame.K_d]:
+            jogador.andardireita()
+
+        else:
+            jogador.parardireita()
+
+        if keys[pygame.K_w]:
+            jogador.andarsubindo()
         
         else:
-            jogador.parar()
+            jogador.pararsubindo()
+
+        if keys[pygame.K_a]:
+           
+            jogador.andaresquerda()
+
+        else:
+            jogador.pararesqueda()
+
+        if keys[pygame.K_s]:
+            jogador.andardescendo()
+        
+        else:
+            jogador.parardescendo()
+
+        
             
     #Recebe e lida com inputs do teclado
     keys = pygame.key.get_pressed()

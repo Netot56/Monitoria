@@ -12,19 +12,20 @@ class Jogador(pygame.sprite.Sprite):
         self.sprites = []
 
         #Chamdando a pasta onde estão as imagens do personagem
-        self.pasta = './personagem/'
+        self.pasta = './heroi/'
 
         #Acessando pasta
         self.itens_na_pasta = os.listdir(self.pasta)
         
         for item in self.itens_na_pasta:
-            for i in range(1,len(item)):
+            for i in range(0,11):
                 #Chamando cada imagem e adicionando na lista self.sprites
-                self.sprites.append(pygame.image.load(f'personagem/run-{i}.png'))
+                self.sprites.append(pygame.image.load(f'heroi/Personagem{i}.png'))
 
         #Primeira imagem que aparece na tela
         self.atual = 0
         self.image = self.sprites[self.atual] 
+        self.image = pygame.transform.scale(self.image, (15*2.5,20*2.5))
 
         #Define a posição como objeto Vector2 (Vetor bidimensional)
         self.pos = pygame.Vector2(x, y)
@@ -53,8 +54,9 @@ class Jogador(pygame.sprite.Sprite):
             if self.atual>=len(self.sprites):
                 self.atual = 0
                 #self.animar = False #Precisa mudar
+            
             self.image = self.sprites[int(self.atual)]
-            #self.image = pygame.transform.scale(self.image, (128*3,64*3))
+            self.image = pygame.transform.scale(self.image, (15*2.5,20*2.5))
 
 
 

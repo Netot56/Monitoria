@@ -1,6 +1,7 @@
 from typing import Any
 from pygame.locals import *
 import pygame
+import math
 import sys
 import os
 
@@ -83,6 +84,36 @@ class Jogador(pygame.sprite.Sprite):
             self.pos.x += self.vel
         self.rect = self.image.get_rect(center=(self.pos.x, self.pos.y))
 
+def nova_pos(velha_pos, vel, angulo):
+    mover_vec = pygame.math.Vector2()
+    mover_vec.from_polar((vel, angulo))
+    return velha_pos + mover_vec
+
+class Bala(pygame.sprite.Sprite):
+    def __init__(self, x, y, direc, vel, tamanho):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("objetos/bala.png")
+        self.image = pygame.transform.scale(self.image, (50, 50))
+        self.image = pygame.transform.rotate(self.image, direc)
+        self.rect = self.image.get_rect(center = (x, y))
+        self.pos = (x, y)
+        self.direcao = direc
+        self.vel = vel
+
+    def update(self, janela):
+        self.pos = nova_pos(self.pos, self.vel, -self.direcao)
+        self.rect.center = round(self.pos[0]), round(self.pos[1])
+        if not janela.get_rect().colliderect(self.rect):
+            self.kill()
+
+class Vetor():
+    def __init__(self, ponto1 : list, ponto2 : list):
+        self.x = ponto2[0] - ponto1[0]
+        self.y = ponto2[1] - ponto1[1]
+
+    def angulo_para(self, vetor2):
+        return math.degrees(math.acos((self.x * vetor2.x + self.y * vetor2.y) / (math.sqrt((self.x ** 2) + (self.y ** 2)) * math.sqrt((vetor2.x ** 2) + (vetor2.y ** 2)))))
+
 # Inicializa e configura o Pygame
 pygame.init()
 clock = pygame.time.Clock()
@@ -93,24 +124,25 @@ altura = 600
 janela = pygame.display.set_mode((largura, altura))
 pygame.display.set_caption("Inicio Pygame")
 
-# Cores
-branco = (255, 255, 255)
-vermelho = (255, 0, 0)
-
 # Variáveis do círculo
 raio = 50
 x_circulo = largura // 2
 y_circulo = altura // 2
 
-#Define objeto Jogador
-'''todas_sprites = pygame.sprite.Group()'''
+#Define objeto e grupo Jogador
 jogador = Jogador(largura / 2, altura /2)
-'''todas_sprites.add(jogador)'''
 grupoJogador = pygame.sprite.GroupSingle()
 grupoJogador.add(jogador)
 
+#Define o grupo de sprites gerais
+spr = pygame.sprite.Group()
+
+#Carrega
 cenario = pygame.image.load('cenario/mapa.png')
 cenario = pygame.transform.scale(cenario,(largura, altura))
+
+delay_tiro = 50
+pode_atirar = True
 
 # Loop principal
 while True:
@@ -129,38 +161,54 @@ while True:
         else:
             jogador.parar()
             
-    #Desenhando meu jogador        
-    #todas_sprites.draw(janela)
-    #todas_sprites.update()
-    
-
     #Recebe e lida com inputs do teclado
     keys = pygame.key.get_pressed()
  
     if keys[pygame.K_w]:
         grupoJogador.sprite.move("up")
       
-
     if keys[pygame.K_s]:
         grupoJogador.sprite.move("down")
           
     if keys[pygame.K_a]:
         grupoJogador.sprite.move("left")
       
-
     if keys[pygame.K_d]:
         grupoJogador.sprite.move("right")
+
+    #Recebe e lida com inputs do mouse
+    mouse = pygame.mouse.get_pressed()
+
+    if mouse[0] and pode_atirar == True:
+        pode_atirar = False
+        tempo_tiro = pygame.time.get_ticks()
+        ponto_mouse = pygame.mouse.get_pos() #Pega a posição (x, y) do mouse
+        p0 = [grupoJogador.sprite.pos.x, grupoJogador.sprite.pos.y] #Define p0 na coordenada do player
+        p0p1 = Vetor(p0, [janela.get_width(), grupoJogador.sprite.pos.y]) #Define o vetor p0p1 que é entre o p0 e o ponto mais a direita da tela
+        p0p2 = Vetor(p0, ponto_mouse) #Define o vetor p0p2 que é entre p0 e o ponto do mouse
+
+        if p0p2.y <= 0: #Se o mouse está na metade de cima da tela
+            spr.add(Bala(*grupoJogador.sprite.pos, p0p1.angulo_para(p0p2), 15, (10, 10)))
+        if p0p2.y > 0: #Se o mouse está na metade de baixo da tela
+            spr.add(Bala(*grupoJogador.sprite.pos, 180 + (180 - p0p1.angulo_para(p0p2)), 15, (10, 10)))
+
+
+    if pode_atirar == False:
+        if pygame.time.get_ticks() - tempo_tiro >= delay_tiro:
+            pode_atirar = True
                 
     # Limpa a tela
-    janela.fill(branco)
-
+    janela.fill((255, 255, 255))
     janela.blit(cenario, (0, 0))
 
-    #Desenha o jogador na tela
+    #Desenha e atualiza o jogador na tela
     grupoJogador.draw(janela)
-
-    pygame.display.flip()
-
     grupoJogador.update()
+
+    #Desenha e atualiza todo sprite na tela
+    spr.draw(janela)
+    spr.update(janela)
+
     # Atualiza a tela
+    pygame.display.flip()
     pygame.display.update()

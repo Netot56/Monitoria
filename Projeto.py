@@ -1,7 +1,7 @@
 from typing import Any
 from pygame.locals import *
 import pygame, math, sys, os
-from telas import *
+from menu import *
 
 class Jogador(pygame.sprite.Sprite):
     def __init__(self, x: int, y: int):

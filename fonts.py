@@ -1,4 +1,4 @@
 import pygame
 
 def fontPlayScreen(size):
-    return pygame.font.Font("fonts/Triforce.ttf", size)
+    pygame.font.SysFont("fonts/Triforce.ttf", 25, True)

@@ -1,5 +1,6 @@
 from typing import Any
 from pygame.locals import *
+import random as r
 import pygame, math, sys, os
 from menu import *
 
@@ -56,8 +57,7 @@ class Jogador(pygame.sprite.Sprite):
         self.pos = pygame.Vector2(x, y)
         self.rect = self.image.get_rect(center = (self.pos.x, self.pos.y)) #Define o objeto rect tendo centro no centro da image
         self.tamanho = self.rect.width #Define tamanho como largura do rect
-        self.vel = 1 #Define velocidade
-
+        self.vel = 10 #Define velocidade
 
        
 
@@ -177,6 +177,37 @@ def nova_pos(velha_pos, vel, angulo):
     mover_vec.from_polar((vel, angulo))
     return velha_pos + mover_vec
 
+class Inimigo(pygame.sprite.Sprite):
+    def __init__(self, x, y, dano, vel, tamanho, grupoJogador):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load("inimigos/morcego.png")
+        self.image = pygame.transform.scale(self.image, tamanho)
+        self.pos = (x, y)
+
+        self.rect = self.image.get_rect(center = self.pos)
+
+        self.vel = vel
+        self.dano = dano
+
+    def update(self, janela):
+
+        p0 = [self.pos[0], self.pos[1]] #Define p0 na coordenada do player
+        p0p1 = Vetor(p0, [janela.get_width(), self.pos[1]]) #Define o vetor p0p1 que é entre o p0 e o ponto mais a direita da tela
+        p0p2 = Vetor(p0, grupoJogador.sprite.pos) #Define o vetor p0p2 que é entre p0 e o ponto do mouse
+
+        if p0p2.y <= 0:
+            print("<0")
+            self.pos = nova_pos(self.pos, self.vel, -p0p1.angulo_para(p0p2))
+        if p0p2.y > 0:
+            print(">0")
+            self.pos = nova_pos(self.pos, self.vel, -(180 +(180 - p0p1.angulo_para(p0p2))))
+        self.rect.center = round(self.pos[0]), round(self.pos[1])
+        if not janela.get_rect().colliderect(self.rect):
+            self.kill()
+        if grupoJogador.sprite.rect.colliderect(self.rect):
+            self.kill()
+
+
 class Bala(pygame.sprite.Sprite):
     def __init__(self, x, y, direc, vel, tamanho):
         pygame.sprite.Sprite.__init__(self)
@@ -196,11 +227,11 @@ class Bala(pygame.sprite.Sprite):
 
 class Vetor():
     def __init__(self, ponto1 : list, ponto2 : list):
-        self.x = ponto2[0] - ponto1[0]
-        self.y = ponto2[1] - ponto1[1]
+        self.x = int(ponto2[0] - ponto1[0])
+        self.y = int(ponto2[1] - ponto1[1])
 
     def angulo_para(self, vetor2):
-        return math.degrees(math.acos((self.x * vetor2.x + self.y * vetor2.y) / (math.sqrt((self.x ** 2) + (self.y ** 2)) * math.sqrt((vetor2.x ** 2) + (vetor2.y ** 2)))))
+        return int(math.degrees(math.acos((self.x * vetor2.x + self.y * vetor2.y) / (math.sqrt((self.x ** 2) + (self.y ** 2)) * math.sqrt((vetor2.x ** 2) + (vetor2.y ** 2))))))
 
 # Inicializa e configura o Pygame
 pygame.init()
@@ -228,6 +259,10 @@ spr = pygame.sprite.Group()
 #Carrega
 cenario = pygame.image.load('cenario/mapa.png')
 cenario = pygame.transform.scale(cenario,(largura, altura))
+
+spawn_positions = []
+for i in range(240, 330, 10):
+    spawn_positions.append((-20, i))
 
 delay_tiro = 50
 pode_atirar = True
@@ -285,6 +320,9 @@ while True:
     if keys[pygame.K_d]:
         grupoJogador.sprite.move("right")
 
+    if keys[pygame.K_e]:
+        spr.add(Inimigo(*r.choice(spawn_positions), 15, 10, (25, 25), grupoJogador))
+
     #Recebe e lida com inputs do mouse
     mouse = pygame.mouse.get_pressed()
 
@@ -292,6 +330,7 @@ while True:
         pode_atirar = False
         tempo_tiro = pygame.time.get_ticks()
         ponto_mouse = pygame.mouse.get_pos() #Pega a posição (x, y) do mouse
+        print(ponto_mouse)
         p0 = [grupoJogador.sprite.pos.x, grupoJogador.sprite.pos.y] #Define p0 na coordenada do player
         p0p1 = Vetor(p0, [janela.get_width(), grupoJogador.sprite.pos.y]) #Define o vetor p0p1 que é entre o p0 e o ponto mais a direita da tela
         p0p2 = Vetor(p0, ponto_mouse) #Define o vetor p0p2 que é entre p0 e o ponto do mouse

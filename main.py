@@ -1,7 +1,7 @@
 import pygame
 
 from settings import *
-import sys
+import sys, menu
 
 class Game:
 
@@ -21,6 +21,7 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
+            menu.menu()
             self.screen.fill("black")
             pygame.display.update()
             self.clock.tick(fps)

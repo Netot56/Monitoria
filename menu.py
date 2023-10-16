@@ -1,48 +1,73 @@
-import pygame
-from settings import *
-from sys import exit
-from pygame.locals import *
 
-from time import sleep
+import pygame, sys, button, settings as const
+from button import Button
 
-def __init__(self):
+pygame.init()
+screen = const.tela
+pygame.display.set_caption("Menu")
 
-        pygame.init()
+#CONTROLANDO AS SETAS NO MENU PRINCIPAL DO JOGO
 
-        self.screen = pygame.display.set_mode((width, height))
-        pygame.display.set_caption("Inicio Pygame")
+def font(size):
+    return pygame.font.Font("fonts/Triforce.ttf", size)
 
-def menu():
+def play():
+    playMousePos = pygame.mouse.get_pos()
 
-    pygame.init()
+    const.tela.fill("black")
 
-    #DEFININDO A FONTE USADA PARA EXIBIR AS OPÇÕES
-    fonteOpcao = pygame.font.SysFont(fonte, 25, True)
+    playText = font(45).render("This is the PLAY screen.", True, "White")
+    playRect = playText.get_rect(center=(640, 260))
+    screen.blit(playText, playRect)
 
+    playBack = button.Button(image=None, pos=(640, 460), 
+                        text_input="BACK", font=font(75), base_color="White", hovering_color="Green")
 
-    #LISTA DE OPÇÕES DO MENU E A AUTORIA DA CRIAÇÃO DO JOGO
-    opc1 = fonteOpcao.render("Inciar", True, "black")
+    playBack.changeColor(playMousePos)
+    playBack.update(screen)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if playBack.checkForInput(playMousePos):
+                main_menu()
+
+    pygame.display.update()
+
+def main_menu():
+    menuText = font(100).render("Mudinho Adventure", True, "#b68f40")
     
 
+    startButtonText = font(50).render("Inicar", True, "white")
+    
+
+    exitButtonText = font(50).render("Sair",True, "white")
+    
     while True:
-        relogio.tick(fps)
- 
+
+        menuPosMouse = pygame.mouse.get_pos()
+
+        menuRect = menuText.get_rect(center=(640, 100))
+        startButtonRect = startButtonText.get_rect(center=(470,160))
+        exitButtonRect = exitButtonText.get_rect(center=(472,260))
+
+        const.tela.blit(menuText, (400, 160))
+        const.tela.blit(startButtonText, (472, 260))
+        const.tela.blit(exitButtonText, (510, 360))
+
         for event in pygame.event.get():
-            if event.type == QUIT:
+            if event.type == pygame.QUIT:
                 pygame.quit()
-                exit()
-            
-        tela.fill()
-        
-        pygame.draw.rect(tela,"white", (410, 140, 300, 80))
-        
-        tela.blit(opc1, (470, 160))
-        
-        tecla = pygame.key.get_pressed()
-        
-      
-        
+                sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if startButtonText.checkForInput(menuPosMouse):
+                    play()
+                if exitButtonText.checkForInput(menuPosMouse):
+                    pygame.quit()
+                    sys.exit()
 
-        
+        pygame.display.update()
 
-        pygame.display.flip()
+main_menu()

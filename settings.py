@@ -13,6 +13,8 @@ def import_folder(path):
 
 	return surface_list
 
+def font(size):
+    return pygame.font.Font("fonts/Triforce.ttf", size)
 
 width = 1280
 height = 720

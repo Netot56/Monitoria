@@ -1,80 +1,48 @@
 import pygame
-import sys
+from settings import *
+from sys import exit
+from pygame.locals import *
 
+from time import sleep
 
-pygame.init()
+def __init__(self):
 
-largura, altura = 800, 600
-tela = pygame.display.set_mode((largura, altura))
-pygame.display.set_caption('Jogo com Menu')
+        pygame.init()
 
-tela_atual = "menu"
+        self.screen = pygame.display.set_mode((width, height))
+        pygame.display.set_caption("Inicio Pygame")
 
-fonte = pygame.font.Font(None, 36)
-texto = fonte.render('Precisa importar o código aqui', True, "red")
-posicao_texto = texto.get_rect(center=(largura // 2, altura // 2))
-
-# Função para desenhar o botão
-def desenhar_botao(x, y, largura, altura, cor, texto, cor_texto):
-    pygame.draw.rect(tela, cor, (x, y, largura, altura))
-    fonte = pygame.font.Font(None, 36)
-    texto_surface = fonte.render(texto, True, cor_texto)
-    texto_retangulo = texto_surface.get_rect()
-    texto_retangulo.center = (x + largura / 2, y + altura / 2)
-    tela.blit(texto_surface, texto_retangulo)
-
-# Função para exibir o menu
 def menu():
-    start = True
 
-    while start:
+    pygame.init()
+
+    #DEFININDO A FONTE USADA PARA EXIBIR AS OPÇÕES
+    fonteOpcao = pygame.font.SysFont(fonte, 25, True)
+
+
+    #LISTA DE OPÇÕES DO MENU E A AUTORIA DA CRIAÇÃO DO JOGO
+    opc1 = fonteOpcao.render("Inciar", True, "black")
+    
+
+    while True:
+        relogio.tick(fps)
+ 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                start = False
-
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                
-                if largura/2 - 50 <= mouse[0] <= largura/2 + 50 and altura/2 - 25 <= mouse[1] <= altura/2 + 25:
-                    return jogo()
+            if event.type == QUIT:
+                pygame.quit()
+                exit()
+            
+        tela.fill()
+        
+        pygame.draw.rect(tela,"white", (410, 140, 300, 80))
+        
+        tela.blit(opc1, (470, 160))
+        
+        tecla = pygame.key.get_pressed()
+        
+      
+        
 
         
-        mouse = pygame.mouse.get_pos()
 
-        
-        tela.fill("white")
-
-        
-        desenhar_botao(largura/2 - 50, altura/2 - 25, 100, 50, "red", "Iniciar", "white")
-
-        pygame.display.update()
-
-    return "sair"
-
-
-
-def jogo():
-    start = True
-
-    while start:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                start = False
-
-        
-        tela.fill(("white"))
-        tela.blit(texto, posicao_texto)
-
-
-        pygame.display.update()
-
-    return "sair"
-
-# Loop principal
-while tela_atual != "sair":
-    if tela_atual == "menu":
-        tela_atual = menu()
-    elif tela_atual == "jogo":
-        tela_atual = jogo()
-
-pygame.quit()
-sys.exit()
+        pygame.display.flip()

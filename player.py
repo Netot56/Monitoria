@@ -1,3 +1,4 @@
+from typing import Any
 import pygame
 from settings import import_folder
 
@@ -20,6 +21,32 @@ class Player(pygame.sprite.Sprite):
         self.flame_index = 0
         self.animation_speed = 0.15 # Velocidade da transição das imagem
     
+    def input(self):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_UP]:
+            self.direction.y = -1
+            self.status = 'up'
+
+        elif keys[pygame.K_DOWN]:
+            self.direction.y = 1
+            self.status = 'down'
+        
+        else:
+            self.direction.y = 0
+
+        if keys[pygame.K_RIGHT]:
+            self.direction.x = 1
+            self.status = 'right'
+
+        elif keys[pygame.K_LEFT]:
+            self.direction.x = -1
+            self.status = 'left'
+
+        else:
+            self.direction.x = 0
+
+
     def import_player_assets(self):
         character_path = '../sprites/hero/'
         self.animations = {'up': [], 'down': [], 'left': [], 'right': [],
@@ -52,11 +79,10 @@ class Player(pygame.sprite.Sprite):
         self.image = animation [int(self.frame_index)]
         self.rect = self.image.get_rect(center = self.hitbox.center)
 
-        self.direction = pygame.math.Vector2
-
-    def input(self):
-        keys = pygame.key.get_pressed()
-
-        if keys[pygame.K_UP]:
-            self.direction.y = -1
-
+    
+    def update(self):
+        self.input()
+        self.get_status()
+        self.animate()
+        self.move(self.speed)
+       

@@ -1,5 +1,6 @@
 import pygame
 import fonts
+from os import walk
 
 def import_folder(path):
 	surface_list = []
